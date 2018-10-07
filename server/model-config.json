@@ -35,16 +35,24 @@
     "dataSource": "db",
     "public": false
   },
-  "Guide": {
+  "guides": {
     "dataSource": "db",
     "public": true,
     "$promise": {},
     "$resolved": true
   },
-  "Place": {
+  "places": {
     "dataSource": "db",
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "excursions": {
+    "dataSource": "db",
+    "public": true
+  },
+  "orders": {
+    "dataSource": "db",
+    "public": true
   }
 }

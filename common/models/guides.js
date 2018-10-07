@@ -1,11 +1,11 @@
 'use strict';
 
-module.exports = (Guide) => {
-    Guide.state = (msg, cb) => {
+module.exports = (guides) => {
+    guides.state = (msg, cb) => {
         cb(null,'Вызвал ' + msg);
     }
 
-    Guide.remoteMethod(
+    guides.remoteMethod(
         'state', {
             accepts: {arg: 'msg', type: 'number'},
             returns: {arg: 'state', type: 'string'}

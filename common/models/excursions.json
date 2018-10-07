@@ -1,0 +1,48 @@
+{
+  "name": "excursions",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "_id": {
+      "type": "string",
+      "required": true
+    },
+    "guide": {
+      "type": "string",
+      "required": true
+    },
+    "place": {
+      "type": "string",
+      "required": true
+    },
+    "text": {
+      "type": "string",
+      "required": true
+    },
+    "prices": {
+      "type": [
+        "any"
+      ],
+      "required": true
+    },
+    "totalMark": {
+      "type": "number",
+      "required": true
+    },
+    "conductedExc": {
+      "type": "number",
+      "required": true
+    },
+    "__v": {
+      "type": "number",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

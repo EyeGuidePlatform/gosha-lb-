@@ -4,7 +4,19 @@
     "port": 27017,
     "url": "",
     "database": "EyeguideTest",
+    "password": "",
     "name": "db",
+    "connector": "mongodb",
+    "user": ""
+  },
+  "EyeguideTest": {
+    "host": "",
+    "port": 27017,
+    "url": "",
+    "database": "EyeguideTest",
+    "password": "",
+    "name": "EyeguideTest",
+    "user": "",
     "connector": "mongodb"
   }
 }
