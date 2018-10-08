@@ -1,16 +1,11 @@
 'use strict';
 var app = require('../../server/server');
 //var placesM = require('./places.js');
-console.log(app.models);
-
 module.exports = function(Orders) {
-    const placeModel = app.models.places,
-    //place = app.model(placesM);
-    guideModel = app.models.guides,
-    exModel = app.models.excursions; 
+    const placeModel = require('loopback').getModel('places');//app.models.Places,
 
     Orders.getOrderStatus = async (id,cb) => {
-        console.log(placeModel);
+        console.log(placeModel)
     let order = await Orders.findOne({
         where:{
             "_id":id
