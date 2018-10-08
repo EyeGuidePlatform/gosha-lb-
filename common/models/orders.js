@@ -1,77 +1,123 @@
 'use strict';
-var app = require('../../server/server');
-//var placesM = require('./places.js');
-console.log(app.models);
 
 module.exports = function(Orders) {
-    const placeModel = app.models.places,
-    //place = app.model(placesM);
-    guideModel = app.models.guides,
-    exModel = app.models.excursions; 
+    const placeModel = require('loopback').getModel('places'),
+    guideModel = require('loopback').getModel('guides'),
+    exModel = require('loopback').getModel('excursions'); 
 
-    Orders.getOrderStatus = async (id,cb) => {
-        console.log(placeModel);
+    Orders.getOrderStatus = async (id) => {
     let order = await Orders.findOne({
         where:{
             "_id":id
         }
     }
     );
-    let p = await placeModel.findOne({
+    let place = await placeModel.findOne({
         where:{
-            "lang":"ru"
+            "id": order.place
+        }
+    }
+    );
+    let excursion = await exModel.findOne({
+        where:{
+            "id":order.excursion
+        }
+    }
+    );
+    let guide = await guideModel.findOne({
+        where:{
+        "id": excursion.guide
         }
     }
     );
     
-       console.log(p);
-/*
-        let _price;
-        for (let i=0; i<excursion.prices.length; i++){
-            if (order.people >= excursion.prices[i].people[0] && order.people <= excursion.prices[i].people[1]){
-                _price = excursion.prices[i].price;
-                break;
-            }
+    let _price;
+    for (let i=0; i<excursion.prices.length; i++){
+        if (order.people >= excursion.prices[i].people[0] && order.people <= excursion.prices[i].people[1]){
+            _price = excursion.prices[i].price;
+            break;
         }
-        if (order.people >= excursion.prices[excursion.prices.length-1].people[0] && excursion.prices[excursion.prices.length-1].people[1] == 0)
-            _price = excursion.prices[excursion.prices.length-1].price;
-           */ 
-        cb(null,order,p);
+    }
+    if (order.people >= excursion.prices[excursion.prices.length-1].people[0] && excursion.prices[excursion.prices.length-1].people[1] == 0)
+        _price = excursion.prices[excursion.prices.length-1].price;
+        
+
+        return [{'place':place},{'order':order},{'guide':guide},{'price':_price}];
 
     
 };
-/*
-Orders.rateExcursion = async (req, res) => {
-    let order = await orderModel.getOrder(req.params.id),
-        guide = await guideModel.getGuide(order.excursion.guide);
-    order.mark = req.body.star;
+
+Orders.rateExcursion = async (id,star) => {
+       let order = await Orders.findOne({
+        where:{
+            "_id":id
+        }
+    }
+    );
+    let excursion = await exModel.findOne({
+        where:{
+            "id":order.excursion
+        }
+    }
+    );
+    let guide = await guideModel.findOne({
+        where:{
+        "id": excursion.guide
+        }
+    }
+    );
+    order.mark = star;
     if (order.mark === 5) {
         guide.info.happy++;
         await guide.save();
     }
     await order.save();
-    req.flash('success', 'Спасибо за оценку!');
-    res.redirect('/');
+    //req.flash('success', 'Спасибо за оценку!'); //не знаю, что с этим делать
+    //res.redirect('/');
 }
 
-Orders.cancelExcursion = async (req, res) => {
-    let order = await orderModel.getOrder(req.body._id);
+Orders.cancelExcursion = async (id) => {
+    let order = await Orders.findOne({
+        where:{
+            "_id":id
+        }
+    }
+    );
     order.mark = 0;
     if (order.status === 0) order.status = 3;
     else if (order.status === 1) order.status = 5;
     await order.save();
-    req.flash('error', 'Экскурсия отменена');
-    res.redirect('/');
+    //req.flash('error', 'Экскурсия отменена');
+    //res.redirect('/');
 }
-*/
+
 Orders.remoteMethod(
     'getOrderStatus',
     {
-        http:{path:'/status', verb:'get'},
+        http:{path:'/getOrderStatus', verb:'get'},
         accepts:{arg:'id', type:'string'},
-        returns:{arg:'status',type:'string'}
+        returns:{arg:'status',type:'array'}
+    }
+);
+Orders.remoteMethod(
+    'rateExcursion',
+    {
+        http:{path:'/rateExcursion', verb:'get'},
+        accepts:[
+            {arg:'id', type:'string'},
+            {arg:'star', type:'number'}
+        ],
+    }
+);
+Orders.remoteMethod(
+    'cancelExcursion',
+    {
+        http:{path:'/cancelExcursion', verb:'post'},
+        accepts:{arg:'id', type:'string'}
+        
     }
 )
+
 
 };
 

@@ -8,12 +8,10 @@
   "properties": {
     "Name": {
       "type": "string",
-      "required": true,
       "comments": "Имя"
     },
     "Surname": {
       "type": "string",
-      "required": true,
       "comments": "Фамилия"
     }
   },
